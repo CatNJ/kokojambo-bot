@@ -15,12 +15,14 @@ class User:
 
 
 	def check_user(self, user_id):
-		cur.execute(f"SELECT {self.user_id} FROM users WHERE user_id")
+		cur.execute(f"SELECT * FROM users WHERE user_id = {self.user_id}")
 		if cur.fetchone() == None:
-			cur.execute("INSERT INTO users VALUES( ?, ?, ?, ?, ?, ? );", (user_id, 'Игрок', 10000, 0, 1, 'Безработный'))
+			cur.execute("INSERT INTO users VALUES( ?, ?, ?, ?, ?, ?, ?);", (user_id, 'Игрок', 10000, 0, 10, 'Безработный', 'Не установлен'))
 			db.commit()
 
-	def user_info(self, user_id):
+
+
+	def user_info(self):
 		cur.execute(f"SELECT * FROM users WHERE user_id = {self.user_id}")
 		return cur.fetchone()
 
@@ -45,21 +47,20 @@ class User:
 		cur.execute(f'SELECT lvl FROM users WHERE user_id = {self.user_id}')
 		user_lvl = cur.fetchone()[0]
 
-		min_lvl = 15
+		min_lvl = 10
 
 		lvl = 1
 
-		num = 15
+		num = 5
 
 		nom = 5
 
 		while True:
-			if user_lvl < min_lvl:
+			if user_lvl <= min_lvl:
 
 				break
 
 			else:
-
 				lvl += 1
 
 				min_lvl += num
@@ -70,11 +71,18 @@ class User:
 		return lvl
 
 
+
+
 	def job_add(self, jobe):
 		cur.execute(f'SELECT jobs FROM users WHERE user_id = {self.user_id}')
 		cur.execute(f"UPDATE users SET jobs = ? WHERE user_id = ?", (f'{jobe}', f'{self.user_id}'))
 
 		db.commit()
 
+	def give_lvl(self, lvl):
+		cur.execute(f'SELECT lvl FROM users WHERE user_id = {self.user_id}')
+		user_lvl = cur.fetchone()[0]
+		cur.execute(f'UPDATE users SET lvl = ? WHERE user_id = ?', (f'{lvl + user_lvl}', f'{self.user_id}'))
 
+		db.commit()
 
