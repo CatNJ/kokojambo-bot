@@ -56,7 +56,7 @@ class User:
 		nom = 5
 
 		while True:
-			if user_lvl <= min_lvl:
+			if int(user_lvl) <= int(min_lvl):
 
 				break
 
